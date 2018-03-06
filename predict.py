@@ -6,7 +6,7 @@ from sklearn.metrics import average_precision_score
 from sklearn.metrics import precision_recall_curve
 import matplotlib.pyplot as plt
 
-EPOCH = 5000
+EPOCH = 2000
 
 
 def logistic_regression(x_train, y_train, x_test, y_test):

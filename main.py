@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from DeepPredict.dataset.dataHandler import DataHandler
-from DeepPredict.modeling.MyOneHotEncoder import MyOneHotEncoder
-from DeepPredict.predict import logistic_regression, predict_svm
+from DPredict.dataset.dataHandler import DataHandler
+from DPredict.modeling.MyOneHotEncoder import MyOneHotEncoder
+from DPredict.predict import logistic_regression, predict_svm
 from sklearn.metrics import roc_curve, auc
 import matplotlib.pyplot as plt
 import time
@@ -11,19 +11,23 @@ start_time = time.time()
 NUM_FOLDS = 5
 
 
-def k_fold_cross_validation():
-    def _set_x_dict(exception_list=list(), is_test=False):
+def k_fold_cross_validation(is_closed=False):
+    def _set_x_dict(exception_list=list(), _is_test=False):
         x_dict = dict()
 
-        if is_test:
+        if _is_test:
             for _k, _vector_list in myData.data_dict.items():
                 x_dict[_k] = _vector_list[i * subset_size:][:subset_size]
         else:
-            for _k, _vector_list in myData.data_dict.items():
-                if _k in exception_list:
+            if is_closed:
+                for _k, _vector_list in myData.data_dict.items():
                     x_dict[_k] = _vector_list
-                else:
-                    x_dict[_k] = _vector_list[:i * subset_size] + _vector_list[(i + 1) * subset_size:]
+            else:
+                for _k, _vector_list in myData.data_dict.items():
+                    if _k in exception_list:
+                        x_dict[_k] = _vector_list
+                    else:
+                        x_dict[_k] = _vector_list[:i * subset_size] + _vector_list[(i + 1) * subset_size:]
 
         return x_dict
 
@@ -47,9 +51,13 @@ def k_fold_cross_validation():
     # K fold validation,  K = 10
     for i in range(NUM_FOLDS):
         print("\n\nNum Fold : %d times" % (i + 1))
-        # x_test = myData.data_dict[i * subset_size:][:subset_size]
+
+        if is_closed:
+            y_train = myData.y_data
+        else:
+            y_train = myData.y_data[:i * subset_size] + myData.y_data[(i + 1) * subset_size:]
+
         y_test = myData.y_data[i * subset_size:][:subset_size]
-        y_train = myData.y_data[:i * subset_size] + myData.y_data[(i + 1) * subset_size:]
 
         # init MyOneHotEncoder
         myOneHotEncoder = MyOneHotEncoder()
@@ -59,8 +67,8 @@ def k_fold_cross_validation():
         myOneHotEncoder.encoding(_set_x_dict(exception_list=["J", "AO", "AP", "AQ", "AR", "AS"]))
 
         # get x_data from dictionary(data set), and set data count
-        x_train = myOneHotEncoder.fit(_set_x_dict(is_test=False), len(y_train))
-        x_test = myOneHotEncoder.fit(_set_x_dict(is_test=True), len(y_test))
+        x_train = myOneHotEncoder.fit(_set_x_dict(_is_test=False), len(y_train))
+        x_test = myOneHotEncoder.fit(_set_x_dict(_is_test=True), len(y_test))
 
         print("\ndims - ", len(x_train[0]))
         print("training count -", len(y_train), "\t mortality count -", myData.counting_mortality(y_train))
@@ -100,7 +108,7 @@ if __name__ == '__main__':
     myData.set_labels()
     myData.free()
 
-    k_fold_cross_validation()
+    k_fold_cross_validation(is_closed=True)
 
     end_time = time.time()
     print("processing time     --- %s seconds ---" % (time.time() - start_time))
