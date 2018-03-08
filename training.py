@@ -2,11 +2,11 @@ from modeling.MyOneHotEncoder import MyOneHotEncoder
 from predict import logistic_regression, predict_svm
 from sklearn.metrics import roc_curve, auc
 import matplotlib.pyplot as plt
-from variables import NUM_FOLDS
+from variables import NUM_FOLDS, IS_CLOSED
 import numpy as np
 
 
-def k_fold_cross_validation(myData, is_closed=False):
+def k_fold_cross_validation(myData):
     def _set_x_dict(exception_list=list(), _is_test=False):
         x_dict = dict()
 
@@ -14,7 +14,7 @@ def k_fold_cross_validation(myData, is_closed=False):
             for _k, _vector_list in myData.data_dict.items():
                 x_dict[_k] = _vector_list[i * subset_size:][:subset_size]
         else:
-            if is_closed:
+            if IS_CLOSED:
                 for _k, _vector_list in myData.data_dict.items():
                     x_dict[_k] = _vector_list
             else:
@@ -47,7 +47,7 @@ def k_fold_cross_validation(myData, is_closed=False):
     for i in range(NUM_FOLDS):
         print("\n\nNum Fold : %d times" % (i + 1))
 
-        if is_closed:
+        if IS_CLOSED:
             y_train = myData.y_data
         else:
             y_train = myData.y_data[:i * subset_size] + myData.y_data[(i + 1) * subset_size:]
@@ -98,7 +98,7 @@ def k_fold_cross_validation(myData, is_closed=False):
     plt.show()
 
 
-def one_fold_validation(myData, is_closed=False):
+def one_fold_validation(myData):
     def _set_x_dict(exception_list=list(), _is_test=False):
         x_dict = dict()
 
@@ -106,7 +106,7 @@ def one_fold_validation(myData, is_closed=False):
             for _k, _vector_list in myData.data_dict.items():
                 x_dict[_k] = _vector_list[:subset_size]
         else:
-            if is_closed:
+            if IS_CLOSED:
                 for _k, _vector_list in myData.data_dict.items():
                     x_dict[_k] = _vector_list
             else:
@@ -138,7 +138,7 @@ def one_fold_validation(myData, is_closed=False):
 
     subset_size = int(len(myData.y_data) / 10)
 
-    if is_closed:
+    if IS_CLOSED:
         y_train = myData.y_data
     else:
         y_train = myData.y_data[subset_size:]

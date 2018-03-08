@@ -6,16 +6,15 @@ from training import *
 
 start_time = time.time()
 
-
 if __name__ == '__main__':
     myData = DataHandler()
     myData.set_labels()
     myData.free()
 
     if NUM_FOLDS > 1:
-        k_fold_cross_validation(myData, is_closed=True)
+        k_fold_cross_validation(myData)
     else:
-        one_fold_validation(myData, is_closed=False)
+        one_fold_validation(myData)
 
     end_time = time.time()
     print("processing time     --- %s seconds ---" % (time.time() - start_time))
