@@ -43,10 +43,10 @@ def k_fold_cross_validation(is_closed=False):
     svm_plot.set_title("SVM")
     logistic_plot.set_title("Logistic regression")
 
-    svm_plot.set_ylabel("true positive rate")
-    svm_plot.set_xlabel("false positive rate")
-    logistic_plot.set_ylabel("true positive rate")
-    logistic_plot.set_xlabel("false positive rate")
+    svm_plot.set_ylabel("TPR (sensitivity)")
+    svm_plot.set_xlabel("1 - specificity")
+    logistic_plot.set_ylabel("TPR (sensitivity)")
+    logistic_plot.set_xlabel("1 - specificity")
 
     # K fold validation,  K = 10
     for i in range(NUM_FOLDS):
