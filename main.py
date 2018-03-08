@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from DPredict.dataset.dataHandler import DataHandler
-from DPredict.modeling.MyOneHotEncoder import MyOneHotEncoder
-from DPredict.predict import logistic_regression, predict_svm
+from dataset.dataHandler import DataHandler
+from modeling.MyOneHotEncoder import MyOneHotEncoder
+from predict import logistic_regression, predict_svm
 from sklearn.metrics import roc_curve, auc
 import matplotlib.pyplot as plt
 import time
@@ -70,9 +70,9 @@ def k_fold_cross_validation(is_closed=False):
         x_train = myOneHotEncoder.fit(_set_x_dict(_is_test=False), len(y_train))
         x_test = myOneHotEncoder.fit(_set_x_dict(_is_test=True), len(y_test))
 
-        print("\ndims - ", len(x_train[0]))
+        print("dims - ", len(x_train[0]))
         print("training count -", len(y_train), "\t mortality count -", myData.counting_mortality(y_train))
-        print("test     count -", len(y_test), "\t mortality count -", myData.counting_mortality(y_test))
+        print("test     count -", len(y_test), "\t mortality count -", myData.counting_mortality(y_test), "\n")
 
     ######Logistic Regression
 
