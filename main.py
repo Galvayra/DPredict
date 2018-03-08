@@ -12,7 +12,10 @@ if __name__ == '__main__':
     myData.set_labels()
     myData.free()
 
-    k_fold_cross_validation(myData, is_closed=True)
+    if NUM_FOLDS > 1:
+        k_fold_cross_validation(myData, is_closed=True)
+    else:
+        one_fold_validation(myData, is_closed=False)
 
     end_time = time.time()
     print("processing time     --- %s seconds ---" % (time.time() - start_time))

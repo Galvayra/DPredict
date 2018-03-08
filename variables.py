@@ -1,2 +1,2 @@
 
-NUM_FOLDS = 5
+NUM_FOLDS = 1
