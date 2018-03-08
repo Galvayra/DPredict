@@ -1,0 +1,2 @@
+
+NUM_FOLDS = 5
