@@ -1,3 +1,3 @@
 from . import *
 
-__all__ = ['MyOneHotEncoder']
+__all__ = ['myOneHotEncoder.py']

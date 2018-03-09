@@ -1,4 +1,4 @@
-from modeling.MyOneHotEncoder import MyOneHotEncoder
+from modeling.myOneHotEncoder import MyOneHotEncoder
 from predict import logistic_regression, predict_svm
 from sklearn.metrics import roc_curve, auc
 import matplotlib.pyplot as plt
