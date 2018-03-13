@@ -11,12 +11,13 @@ def show_options():
     else:
         print("\n\n========== OPENED DATA SET ==========\n")
 
-    if NUM_FOLDS > 1:
-        option = str(NUM_FOLDS) + " cross validation"
-    else:
-        option = str(NUM_FOLDS) + " test, Ratio - " + str(RATIO)
+        if NUM_FOLDS > 1:
+            option = str(NUM_FOLDS) + " cross validation"
+        else:
+            option = str(NUM_FOLDS) + " test, Ratio - " + str(RATIO)
 
-    print(option)
+        print(option)
+
     print("EPOCH -", EPOCH, "\n\n")
 
 

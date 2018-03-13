@@ -15,9 +15,16 @@ def logistic_regression(x_train, y_train, x_test, y_test):
     X = tf.placeholder(dtype=tf.float32, shape=[None, dimension])
     Y = tf.placeholder(dtype=tf.float32, shape=[None, 1])
 
-    W = tf.Variable(tf.random_normal([dimension, 1]), name="weight")
+    if NUM_FOLDS == 1 or IS_CLOSED:
+        W = tf.get_variable("weight", shape=[dimension, 1], initializer=tf.contrib.layers.xavier_initializer())
+    else:
+        W = tf.Variable(tf.random_normal([dimension, 1]), name="weight")
     b = tf.Variable(tf.random_normal([1]), name="bias")
     hypothesis = tf.sigmoid(tf.matmul(X, W) + b)
+
+    # W3 = tf.get_variable("W3", shape=[10, 1], initializer=tf.contrib.layers.xavier_initializer())
+    # b3 = tf.Variable(tf.random_normal([1]), name="bias3")
+    # hypothesis = tf.sigmoid(tf.matmul(L1, W3) + b3)
 
     with tf.name_scope("cost") as scope:
         cost = -tf.reduce_mean(Y * tf.log(hypothesis) + (1-Y) * tf.log(1-hypothesis))
@@ -25,7 +32,7 @@ def logistic_regression(x_train, y_train, x_test, y_test):
         if NUM_FOLDS == 1 or IS_CLOSED:
             cost_summ = tf.summary.scalar("cost", cost)
 
-    train = tf.train.GradientDescentOptimizer(learning_rate=0.01).minimize(cost)
+    train = tf.train.AdamOptimizer(learning_rate=0.01).minimize(cost)
 
     #cut off
     predict = tf.cast(hypothesis > 0.5, dtype=tf.float32)
@@ -49,15 +56,18 @@ def logistic_regression(x_train, y_train, x_test, y_test):
                 writer.add_summary(summary, global_step=step)
 
                 if step % (EPOCH / 10) == 0:
-                    print(step, cost_val)
+                    print(str(step).rjust(6), cost_val)
         else:
             for step in range(EPOCH + 1):
                 cost_val, _ = sess.run([cost, train], feed_dict={X: x_train, Y: y_train})
 
                 if step % (EPOCH / 10) == 0:
-                    print(step, cost_val)
+                    print(str(step).rjust(6), cost_val)
 
         h, c, a = sess.run([hypothesis, predict, accuracy], feed_dict={X: x_test, Y: y_test})
+
+    if NUM_FOLDS == 1 or IS_CLOSED:
+        print("\n\nsave log!\n")
 
     return h
 
@@ -83,3 +93,7 @@ def predict_svm(x_train, y_train, x_test, y_test):
     print('Average precision-recall : %.2f' % average)
 
     return accuracy_score(y_test_np, y_pred), average, probas_, y_test_np
+
+
+def predict_rnn(x_train, y_train, x_test, y_test):
+    pass
