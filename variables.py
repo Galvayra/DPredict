@@ -1,8 +1,8 @@
 
-NUM_FOLDS = 1
+NUM_FOLDS = 5
 EPOCH = 2000
 RATIO = 10
-IS_CLOSED = True
+IS_CLOSED = False
 
 
 def show_options():

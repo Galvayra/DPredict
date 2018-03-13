@@ -1,10 +1,6 @@
 import tensorflow as tf
 from sklearn.svm import SVC
-import numpy as np
-from sklearn.metrics import accuracy_score
-from sklearn.metrics import average_precision_score
-from sklearn.metrics import precision_recall_curve
-from sklearn.metrics import precision_score, recall_score
+from sklearn.metrics import precision_score, recall_score, f1_score
 from variables import EPOCH, NUM_FOLDS, IS_CLOSED
 
 
@@ -62,19 +58,21 @@ def logistic_regression(x_train, y_train, x_test, y_test):
                 if step % (EPOCH / 10) == 0:
                     print(str(step).rjust(6), cost_val)
 
-        h, p, average = sess.run([hypothesis, predict, accuracy], feed_dict={X: x_test, Y: y_test})
+        h, p, a = sess.run([hypothesis, predict, accuracy], feed_dict={X: x_test, Y: y_test})
 
     if NUM_FOLDS == 1 or IS_CLOSED:
         print("\n\nsave log!\n")
 
+    f1 = f1_score(y_test, p, average="weighted")
     precision = precision_score(y_test, p, average="weighted")
     recall = recall_score(y_test, p, average="weighted")
 
-    print('Accuracy : %.2f' % (average*100))
+    print('logistic regression')
+    print('F1-Score : %.2f' % (f1*100))
     print('Precision : %.2f' % (precision*100))
     print('Recall : %.2f' % (recall*100))
 
-    return h, average, precision, recall
+    return h, f1, precision, recall
 
 
 def predict_svm(x_train, y_train, x_test, y_test):
@@ -82,20 +80,21 @@ def predict_svm(x_train, y_train, x_test, y_test):
     model = SVC(kernel='rbf', C=1.0, random_state=None, probability=True)
     model.fit(x_train, y_train)
     y_pred = model.predict(x_test)
-    y_score = model.decision_function(x_test)
+    # y_score = model.decision_function(x_test)
     probas_ = model.predict_proba(x_test)
 
     # average = average_precision_score(y_test_np, y_score)
 
     # precision, recall, _ = precision_recall_curve(y_test_np, y_score)
 
-    average = accuracy_score(y_test, y_pred)
+    f1 = f1_score(y_test, y_pred, average="weighted")
     precision = precision_score(y_test, y_pred, average="weighted")
     recall = recall_score(y_test, y_pred, average="weighted")
 
-    print('Accuracy : %.2f' % (average*100))
+    print('SVM')
+    print('F1-Score : %.2f' % (f1*100))
     print('Precision : %.2f' % (precision*100))
     print('Recall : %.2f' % (recall*100))
 
-    return probas_, average, precision, recall
+    return probas_, f1, precision, recall
 
