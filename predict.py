@@ -62,38 +62,40 @@ def logistic_regression(x_train, y_train, x_test, y_test):
                 if step % (EPOCH / 10) == 0:
                     print(str(step).rjust(6), cost_val)
 
-        h, c, a = sess.run([hypothesis, predict, accuracy], feed_dict={X: x_test, Y: y_test})
+        h, p, average = sess.run([hypothesis, predict, accuracy], feed_dict={X: x_test, Y: y_test})
 
     if NUM_FOLDS == 1 or IS_CLOSED:
         print("\n\nsave log!\n")
 
-    print('Accuracy : %.2f' % (accuracy_score(y_test, c)*100))
-    print('Precision : %.2f' % (precision_score(y_test, c, average="weighted") * 100))
-    print('Recall : %.2f' % (recall_score(y_test, c, average="weighted") * 100))
+    precision = precision_score(y_test, p, average="weighted")
+    recall = recall_score(y_test, p, average="weighted")
 
-    return h
+    print('Accuracy : %.2f' % (average*100))
+    print('Precision : %.2f' % (precision*100))
+    print('Recall : %.2f' % (recall*100))
+
+    return h, average, precision, recall
 
 
 def predict_svm(x_train, y_train, x_test, y_test):
 
-    x_train_np = np.array([np.array(j) for j in x_train])
-    x_test_np = np.array([np.array(j) for j in x_test])
-    y_train_np = np.array([np.array(j) for j in y_train])
-    y_test_np = np.array([np.array(j) for j in y_test])
-
     model = SVC(kernel='rbf', C=1.0, random_state=None, probability=True)
-    model.fit(x_train_np, y_train_np)
-    y_pred = model.predict(x_test_np)
-    y_score = model.decision_function(x_test_np)
-    probas_ = model.predict_proba(x_test_np)
+    model.fit(x_train, y_train)
+    y_pred = model.predict(x_test)
+    y_score = model.decision_function(x_test)
+    probas_ = model.predict_proba(x_test)
 
-    average = average_precision_score(y_test_np, y_score)
+    # average = average_precision_score(y_test_np, y_score)
 
-    precision, recall, _ = precision_recall_curve(y_test_np, y_score)
+    # precision, recall, _ = precision_recall_curve(y_test_np, y_score)
 
-    print('Accuracy : %.2f' % (accuracy_score(y_test_np, y_pred)*100))
-    print('Precision : %.2f' % (precision_score(y_test_np, y_pred, average="weighted")*100))
-    print('Recall : %.2f' % (recall_score(y_test_np, y_pred, average="weighted")*100))
+    average = accuracy_score(y_test, y_pred)
+    precision = precision_score(y_test, y_pred, average="weighted")
+    recall = recall_score(y_test, y_pred, average="weighted")
 
-    return accuracy_score(y_test_np, y_pred), average, probas_, y_test_np
+    print('Accuracy : %.2f' % (average*100))
+    print('Precision : %.2f' % (precision*100))
+    print('Recall : %.2f' % (recall*100))
+
+    return probas_, average, precision, recall
 
