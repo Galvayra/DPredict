@@ -137,7 +137,7 @@ def one_fold_validation(myData):
     score = logistic_regression(x_train, y_train, x_test, y_test)
     logit_fpr, logit_tpr, _ = roc_curve(y_test, score)
     roc_auc = auc(logit_fpr, logit_tpr)
-    logistic_plot.plot(logit_fpr, logit_tpr, alpha=0.3, label='ROC fold 1 (AUC = %0.2f)' % roc_auc)
+    logistic_plot.plot(logit_fpr, logit_tpr, alpha=0.3, label='ROC fold 1 (AUC = %0.2f)' % (roc_auc*100))
 
     ######Logistic Regression end
 
@@ -147,7 +147,7 @@ def one_fold_validation(myData):
     svm_fpr, svm_tpr, _ = roc_curve(y_test_np, probas_[:, 1])
     roc_auc = auc(svm_fpr, svm_tpr)
 
-    svm_plot.plot(svm_fpr, svm_tpr, alpha=0.3, label='ROC fold 1 (AUC = %0.2f)' % roc_auc)
+    svm_plot.plot(svm_fpr, svm_tpr, alpha=0.3, label='ROC fold 1 (AUC = %0.2f)' % (roc_auc*100))
 
 
     #####SVM end
@@ -186,7 +186,7 @@ def closed_validation(myData):
     score = logistic_regression(x_train, y_train, x_test, y_test)
     logit_fpr, logit_tpr, _ = roc_curve(y_test, score)
     roc_auc = auc(logit_fpr, logit_tpr)
-    logistic_plot.plot(logit_fpr, logit_tpr, alpha=0.3, label='ROC fold 1 (AUC = %0.2f)' % roc_auc)
+    logistic_plot.plot(logit_fpr, logit_tpr, alpha=0.3, label='ROC fold 1 (AUC = %0.2f)' % (roc_auc*100))
 
     ######Logistic Regression end
 
@@ -196,7 +196,7 @@ def closed_validation(myData):
     svm_fpr, svm_tpr, _ = roc_curve(y_test_np, probas_[:, 1])
     roc_auc = auc(svm_fpr, svm_tpr)
 
-    svm_plot.plot(svm_fpr, svm_tpr, alpha=0.3, label='ROC fold 1 (AUC = %0.2f)' % roc_auc)
+    svm_plot.plot(svm_fpr, svm_tpr, alpha=0.3, label='ROC fold 1 (AUC = %0.2f)' % (roc_auc*100))
 
     #####SVM end
 

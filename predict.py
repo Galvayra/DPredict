@@ -4,6 +4,7 @@ import numpy as np
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import average_precision_score
 from sklearn.metrics import precision_recall_curve
+from sklearn.metrics import precision_score, recall_score
 from variables import EPOCH, NUM_FOLDS, IS_CLOSED
 
 
@@ -16,15 +17,12 @@ def logistic_regression(x_train, y_train, x_test, y_test):
     Y = tf.placeholder(dtype=tf.float32, shape=[None, 1])
 
     if NUM_FOLDS == 1 or IS_CLOSED:
-        W = tf.get_variable("weight", shape=[dimension, 1], initializer=tf.contrib.layers.xavier_initializer())
+        W = tf.get_variable("weight1", dtype=tf.float32, shape=[dimension, 1], initializer=tf.contrib.layers.xavier_initializer())
+        b = tf.Variable(tf.random_normal([1]), name="bias1")
     else:
         W = tf.Variable(tf.random_normal([dimension, 1]), name="weight")
-    b = tf.Variable(tf.random_normal([1]), name="bias")
+        b = tf.Variable(tf.random_normal([1]), name="bias")
     hypothesis = tf.sigmoid(tf.matmul(X, W) + b)
-
-    # W3 = tf.get_variable("W3", shape=[10, 1], initializer=tf.contrib.layers.xavier_initializer())
-    # b3 = tf.Variable(tf.random_normal([1]), name="bias3")
-    # hypothesis = tf.sigmoid(tf.matmul(L1, W3) + b3)
 
     with tf.name_scope("cost") as scope:
         cost = -tf.reduce_mean(Y * tf.log(hypothesis) + (1-Y) * tf.log(1-hypothesis))
@@ -69,6 +67,10 @@ def logistic_regression(x_train, y_train, x_test, y_test):
     if NUM_FOLDS == 1 or IS_CLOSED:
         print("\n\nsave log!\n")
 
+    print('Accuracy : %.2f' % (accuracy_score(y_test, c)*100))
+    print('Precision : %.2f' % (precision_score(y_test, c, average="weighted") * 100))
+    print('Recall : %.2f' % (recall_score(y_test, c, average="weighted") * 100))
+
     return h
 
 
@@ -79,21 +81,19 @@ def predict_svm(x_train, y_train, x_test, y_test):
     y_train_np = np.array([np.array(j) for j in y_train])
     y_test_np = np.array([np.array(j) for j in y_test])
 
-    model = SVC(kernel='linear', C=1.0, random_state=0, probability=True)
+    model = SVC(kernel='rbf', C=1.0, random_state=None, probability=True)
     model.fit(x_train_np, y_train_np)
     y_pred = model.predict(x_test_np)
     y_score = model.decision_function(x_test_np)
     probas_ = model.predict_proba(x_test_np)
 
-    average = average_precision_score(y_test, y_score)
+    average = average_precision_score(y_test_np, y_score)
 
     precision, recall, _ = precision_recall_curve(y_test_np, y_score)
 
-    print('Accuracy: %.2f' % (accuracy_score(y_test_np, y_pred)*100))
-    print('Average precision-recall : %.2f' % average)
+    print('Accuracy : %.2f' % (accuracy_score(y_test_np, y_pred)*100))
+    print('Precision : %.2f' % (precision_score(y_test_np, y_pred, average="weighted")*100))
+    print('Recall : %.2f' % (recall_score(y_test_np, y_pred, average="weighted")*100))
 
     return accuracy_score(y_test_np, y_pred), average, probas_, y_test_np
 
-
-def predict_rnn(x_train, y_train, x_test, y_test):
-    pass
