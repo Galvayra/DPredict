@@ -1,8 +1,8 @@
 
 NUM_FOLDS = 5
-EPOCH = 2000
+# using test set 10 %
 RATIO = 10
-IS_CLOSED = False
+IS_CLOSED = True
 
 
 def show_options():
@@ -17,8 +17,6 @@ def show_options():
             option = str(NUM_FOLDS) + " test, Ratio - " + str(RATIO)
 
         print(option)
-
-    print("EPOCH -", EPOCH, "\n\n")
 
 
 show_options()

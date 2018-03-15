@@ -24,7 +24,7 @@ def k_fold_cross_validation(myData):
 
     subset_size = int(len(myData.y_data) / NUM_FOLDS) + 1
 
-    f1 = {"logistic_regression": 0, "svm": 0}
+    accuracy = {"logistic_regression": 0, "svm": 0}
     precision = {"logistic_regression": 0, "svm": 0}
     recall = {"logistic_regression": 0, "svm": 0}
 
@@ -66,27 +66,27 @@ def k_fold_cross_validation(myData):
         y_train_np = np.array([np.array(j) for j in y_train])
         y_test_np = np.array([np.array(j) for j in y_test])
 
-        probas_, f1['svm'], precision['svm'], recall['svm'] = predict_svm(x_train_np, y_train_np, x_test_np,
+        probas_, accuracy['svm'], precision['svm'], recall['svm'] = predict_svm(x_train_np, y_train_np, x_test_np,
                                                                                 y_test_np)
         svm_fpr, svm_tpr, _ = roc_curve(y_test_np, probas_[:, 1])
         roc_auc = auc(svm_fpr, svm_tpr)
         svm_plot.plot(svm_fpr, svm_tpr, alpha=0.3, label='ROC fold %d (AUC = %0.2f)' % ((i+1), (roc_auc * 100)))
 
         # Logistic Regression
-        probas_, f1['logistic_regression'], precision['logistic_regression'], recall[
+        probas_, accuracy['logistic_regression'], precision['logistic_regression'], recall[
             'logistic_regression'] = logistic_regression(x_train, y_train, x_test, y_test)
         logit_fpr, logit_tpr, _ = roc_curve(y_test, probas_)
         roc_auc = auc(logit_fpr, logit_tpr)
         logistic_plot.plot(logit_fpr, logit_tpr, alpha=0.3, label='ROC fold %d (AUC = %0.2f)' % ((i+1), (roc_auc * 100)))
 
-        f1['logistic_regression'] += f1['logistic_regression']
-        f1['svm'] += f1['svm']
+        accuracy['logistic_regression'] += accuracy['logistic_regression']
+        accuracy['svm'] += accuracy['svm']
         precision['logistic_regression'] += precision['logistic_regression']
         precision['svm'] += precision['svm']
         recall['logistic_regression'] += recall['logistic_regression']
         recall['svm'] += recall['svm']
 
-    show_plt(f1, precision, recall, NUM_FOLDS, logistic_plot, svm_plot)
+    show_plt(accuracy, precision, recall, NUM_FOLDS, logistic_plot, svm_plot)
 
 
 def one_fold_validation(myData):
@@ -121,7 +121,7 @@ def one_fold_validation(myData):
 
     subset_size = int(len(myData.y_data) / RATIO)
 
-    f1 = {"logistic_regression": 0, "svm": 0}
+    accuracy = {"logistic_regression": 0, "svm": 0}
     precision = {"logistic_regression": 0, "svm": 0}
     recall = {"logistic_regression": 0, "svm": 0}
 
@@ -147,18 +147,18 @@ def one_fold_validation(myData):
     y_train_np = np.array([np.array(j) for j in y_train])
     y_test_np = np.array([np.array(j) for j in y_test])
 
-    probas_, f1['svm'], precision['svm'], recall['svm'] = predict_svm(x_train_np, y_train_np, x_test_np, y_test_np)
+    probas_, accuracy['svm'], precision['svm'], recall['svm'] = predict_svm(x_train_np, y_train_np, x_test_np, y_test_np)
     svm_fpr, svm_tpr, _ = roc_curve(y_test_np, probas_[:, 1])
     roc_auc = auc(svm_fpr, svm_tpr)
     svm_plot.plot(svm_fpr, svm_tpr, alpha=0.3, label='ROC fold 1 (AUC = %0.2f)' % (roc_auc*100))
 
     # Logistic Regression
-    probas_, f1['logistic_regression'], precision['logistic_regression'], recall['logistic_regression'] = logistic_regression(x_train, y_train, x_test, y_test)
+    probas_, accuracy['logistic_regression'], precision['logistic_regression'], recall['logistic_regression'] = logistic_regression(x_train, y_train, x_test, y_test)
     logit_fpr, logit_tpr, _ = roc_curve(y_test, probas_)
     roc_auc = auc(logit_fpr, logit_tpr)
     logistic_plot.plot(logit_fpr, logit_tpr, alpha=0.3, label='ROC fold 1 (AUC = %0.2f)' % (roc_auc*100))
 
-    show_plt(f1, precision, recall, 1, logistic_plot, svm_plot)
+    show_plt(accuracy, precision, recall, 1, logistic_plot, svm_plot)
 
 
 def closed_validation(myData):
@@ -177,7 +177,7 @@ def closed_validation(myData):
     y_train = myData.y_data
     y_test = myData.y_data
 
-    f1 = {"logistic_regression": 0, "svm": 0}
+    accuracy = {"logistic_regression": 0, "svm": 0}
     precision = {"logistic_regression": 0, "svm": 0}
     recall = {"logistic_regression": 0, "svm": 0}
 
@@ -197,35 +197,35 @@ def closed_validation(myData):
     y_train_np = np.array([np.array(j) for j in y_train])
     y_test_np = np.array([np.array(j) for j in y_test])
 
-    probas_, f1['svm'], precision['svm'], recall['svm'] = predict_svm(x_train_np, y_train_np, x_test_np, y_test_np)
+    probas_, accuracy['svm'], precision['svm'], recall['svm'] = predict_svm(x_train_np, y_train_np, x_test_np, y_test_np)
     svm_fpr, svm_tpr, _ = roc_curve(y_test_np, probas_[:, 1])
     roc_auc = auc(svm_fpr, svm_tpr)
     svm_plot.plot(svm_fpr, svm_tpr, alpha=0.3, label='ROC fold 1 (AUC = %0.2f)' % (roc_auc*100))
 
     # Logistic Regression
-    probas_, f1['logistic_regression'], precision['logistic_regression'], recall['logistic_regression'] = logistic_regression(x_train, y_train, x_test, y_test)
+    probas_, accuracy['logistic_regression'], precision['logistic_regression'], recall['logistic_regression'] = logistic_regression(x_train, y_train, x_test, y_test)
     logit_fpr, logit_tpr, _ = roc_curve(y_test, probas_)
     roc_auc = auc(logit_fpr, logit_tpr)
     logistic_plot.plot(logit_fpr, logit_tpr, alpha=0.3, label='ROC fold 1 (AUC = %0.2f)' % (roc_auc*100))
 
-    show_plt(f1, precision, recall, 1, logistic_plot, svm_plot)
+    show_plt(accuracy, precision, recall, 1, logistic_plot, svm_plot)
 
 
-def show_plt(f1, precision, recall, num_folds, logistic_plot, svm_plot):
+def show_plt(accuracy, precision, recall, num_folds, logistic_plot, svm_plot):
     print("\n\n======================================\n")
     for k in precision:
         print(k)
-        print("Total precision -", precision[k])
+        print("Total precision -", precision[k] / num_folds)
         print()
 
     for k in recall:
         print(k)
-        print("Total recall -", recall[k])
+        print("Total recall -", recall[k] / num_folds)
         print()
 
-    for k in f1:
+    for k in accuracy:
         print(k)
-        print("Total F1-Score -", f1[k])
+        print("Total accuracy-Score -", accuracy[k] / num_folds)
         print()
 
     logistic_plot.legend(loc="lower right")

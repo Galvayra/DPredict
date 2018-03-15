@@ -1,7 +1,10 @@
 import tensorflow as tf
 from sklearn.svm import SVC
-from sklearn.metrics import precision_score, recall_score, f1_score
-from variables import EPOCH, NUM_FOLDS, IS_CLOSED
+from sklearn.metrics import precision_score, recall_score, accuracy_score
+from variables import NUM_FOLDS, IS_CLOSED
+
+HIDDEN_LAYER = 1000
+EPOCH = 300
 
 
 def logistic_regression(x_train, y_train, x_test, y_test):
@@ -13,12 +16,19 @@ def logistic_regression(x_train, y_train, x_test, y_test):
     Y = tf.placeholder(dtype=tf.float32, shape=[None, 1])
 
     if NUM_FOLDS == 1 or IS_CLOSED:
-        W = tf.get_variable("weight1", dtype=tf.float32, shape=[dimension, 1], initializer=tf.contrib.layers.xavier_initializer())
-        b = tf.Variable(tf.random_normal([1]), name="bias1")
+        W = tf.get_variable("weight1", dtype=tf.float32, shape=[dimension, HIDDEN_LAYER],
+                            initializer=tf.contrib.layers.xavier_initializer())
+        b = tf.Variable(tf.random_normal([HIDDEN_LAYER]), name="bias1")
+        L = tf.nn.relu(tf.matmul(X, W) + b)
+
+        W2 = tf.get_variable("weight2", dtype=tf.float32, shape=[HIDDEN_LAYER, 1],
+                            initializer=tf.contrib.layers.xavier_initializer())
+        b2 = tf.Variable(tf.random_normal([1]), name="bias2")
+        hypothesis = tf.sigmoid(tf.matmul(L, W2) + b2)
     else:
         W = tf.Variable(tf.random_normal([dimension, 1]), name="weight")
         b = tf.Variable(tf.random_normal([1]), name="bias")
-    hypothesis = tf.sigmoid(tf.matmul(X, W) + b)
+        hypothesis = tf.sigmoid(tf.matmul(X, W) + b)
 
     with tf.name_scope("cost") as scope:
         cost = -tf.reduce_mean(Y * tf.log(hypothesis) + (1-Y) * tf.log(1-hypothesis))
@@ -59,20 +69,21 @@ def logistic_regression(x_train, y_train, x_test, y_test):
                     print(str(step).rjust(6), cost_val)
 
         h, p, a = sess.run([hypothesis, predict, accuracy], feed_dict={X: x_test, Y: y_test})
+        # print(p)
 
     if NUM_FOLDS == 1 or IS_CLOSED:
         print("\n\nsave log!\n")
 
-    f1 = f1_score(y_test, p, average="weighted")
-    precision = precision_score(y_test, p, average="weighted")
-    recall = recall_score(y_test, p, average="weighted")
+    precision = precision_score(y_test, p)
+    recall = recall_score(y_test, p)
+    accuracy = accuracy_score(y_test, p)
 
     print('logistic regression')
-    print('F1-Score : %.2f' % (f1*100))
     print('Precision : %.2f' % (precision*100))
     print('Recall : %.2f' % (recall*100))
+    print('Accuracy : %.2f' % (accuracy*100))
 
-    return h, f1, precision, recall
+    return h, accuracy, precision, recall
 
 
 def predict_svm(x_train, y_train, x_test, y_test):
@@ -87,14 +98,16 @@ def predict_svm(x_train, y_train, x_test, y_test):
 
     # precision, recall, _ = precision_recall_curve(y_test_np, y_score)
 
-    f1 = f1_score(y_test, y_pred, average="weighted")
-    precision = precision_score(y_test, y_pred, average="weighted")
-    recall = recall_score(y_test, y_pred, average="weighted")
+    precision = precision_score(y_test, y_pred)
+    recall = recall_score(y_test, y_pred)
+    accuracy = accuracy_score(y_test, y_pred)
+
+    # print(y_pred)
 
     print('SVM')
-    print('F1-Score : %.2f' % (f1*100))
     print('Precision : %.2f' % (precision*100))
     print('Recall : %.2f' % (recall*100))
+    print('Accuracy : %.2f' % (accuracy*100))
 
-    return probas_, f1, precision, recall
+    return probas_, accuracy, precision, recall
 
