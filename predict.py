@@ -15,29 +15,15 @@ def logistic_regression(x_train, y_train, x_test, y_test):
     X = tf.placeholder(dtype=tf.float32, shape=[None, dimension])
     Y = tf.placeholder(dtype=tf.float32, shape=[None, 1])
 
-    if NUM_FOLDS == 1 or IS_CLOSED:
-        W = tf.get_variable("weight1", dtype=tf.float32, shape=[dimension, HIDDEN_LAYER],
-                            initializer=tf.contrib.layers.xavier_initializer())
-        b = tf.Variable(tf.random_normal([HIDDEN_LAYER]), name="bias1")
-        L = tf.nn.relu(tf.matmul(X, W) + b)
+    W = tf.get_variable("weight1", dtype=tf.float32, shape=[dimension, HIDDEN_LAYER],
+                        initializer=tf.contrib.layers.xavier_initializer())
+    b = tf.Variable(tf.random_normal([HIDDEN_LAYER]), name="bias1")
+    L = tf.nn.relu(tf.matmul(X, W) + b)
 
-        W2 = tf.get_variable("weight2", dtype=tf.float32, shape=[HIDDEN_LAYER, 1],
-                            initializer=tf.contrib.layers.xavier_initializer())
-        b2 = tf.Variable(tf.random_normal([1]), name="bias2")
-        hypothesis = tf.sigmoid(tf.matmul(L, W2) + b2)
-    else:
-        W = tf.get_variable("weight1", dtype=tf.float32, shape=[dimension, HIDDEN_LAYER],
-                            initializer=tf.contrib.layers.xavier_initializer())
-        b = tf.Variable(tf.random_normal([HIDDEN_LAYER]), name="bias1")
-        L = tf.nn.relu(tf.matmul(X, W) + b)
-
-        W2 = tf.get_variable("weight2", dtype=tf.float32, shape=[HIDDEN_LAYER, 1],
-                            initializer=tf.contrib.layers.xavier_initializer())
-        b2 = tf.Variable(tf.random_normal([1]), name="bias2")
-        hypothesis = tf.sigmoid(tf.matmul(L, W2) + b2)
-        # W = tf.Variable(tf.random_normal([dimension, 1]), name="weight")
-        # b = tf.Variable(tf.random_normal([1]), name="bias")
-        # hypothesis = tf.sigmoid(tf.matmul(X, W) + b)
+    W2 = tf.get_variable("weight2", dtype=tf.float32, shape=[HIDDEN_LAYER, 1],
+                        initializer=tf.contrib.layers.xavier_initializer())
+    b2 = tf.Variable(tf.random_normal([1]), name="bias2")
+    hypothesis = tf.sigmoid(tf.matmul(L, W2) + b2)
 
     with tf.name_scope("cost"):
         cost = -tf.reduce_mean(Y * tf.log(hypothesis) + (1-Y) * tf.log(1-hypothesis))
