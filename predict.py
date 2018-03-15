@@ -3,14 +3,16 @@ from sklearn.svm import SVC
 from sklearn.metrics import precision_score, recall_score, accuracy_score
 from variables import NUM_FOLDS, IS_CLOSED
 
-HIDDEN_LAYER = 800
-EPOCH = 300
+HIDDEN_LAYER = 1000
+EPOCH = 400
 
 
 def logistic_regression(x_train, y_train, x_test, y_test):
     data_count = len(x_train)
     predict_count = len(y_test)
     dimension = len(x_train[0])
+
+    HIDDEN_LAYER = dimension
 
     X = tf.placeholder(dtype=tf.float32, shape=[None, dimension])
     Y = tf.placeholder(dtype=tf.float32, shape=[None, 1])
