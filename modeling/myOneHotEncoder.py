@@ -1,4 +1,7 @@
 
+MIN_SCALING = 0.1
+
+
 class MyOneHotEncoder:
     def __init__(self):
         self.vector_dict = dict()
@@ -113,11 +116,13 @@ class MyOneHotEncoder:
 
                 for i, value in enumerate(v):
                     # exception
-                    if value < minimum or value > maximum:
-                        value = float(-1)
+                    if value > maximum:
+                        value = float(1)
+                    elif value < minimum:
+                        value = MIN_SCALING/(division + MIN_SCALING)
                     # normalization
                     else:
-                        value = (value - minimum)/division
+                        value = (value - minimum + MIN_SCALING)/(division + MIN_SCALING)
 
                     x_data[i].append(value)
 
