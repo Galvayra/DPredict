@@ -252,7 +252,7 @@ def show_plt(accuracy, precision, recall, num_folds, logistic_plot, svm_plot):
 
 def show_shape(myData, x_train, x_test, y_train, y_test):
     print("dims - ", len(x_train[0]))
-    print("training count -", len(y_train), "\t mortality count -", myData.counting_mortality(y_train))
+    print("learning count -", len(y_train), "\t mortality count -", myData.counting_mortality(y_train))
     print("test     count -", len(y_test), "\t mortality count -", myData.counting_mortality(y_test), "\n")
 
     x_train_np = np.array([np.array(j) for j in x_train])
