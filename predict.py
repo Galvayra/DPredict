@@ -4,7 +4,7 @@ from sklearn.metrics import precision_score, recall_score, accuracy_score
 from variables import NUM_FOLDS, IS_CLOSED
 
 HIDDEN_LAYER = 1000
-EPOCH = 400
+EPOCH = 300
 
 
 def logistic_regression(x_train, y_train, x_test, y_test):

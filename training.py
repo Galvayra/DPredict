@@ -161,6 +161,21 @@ def one_fold_validation(myData):
     show_plt(accuracy, precision, recall, 1, logistic_plot, svm_plot)
 
 
+def make_more_mortality(x_train, y_train, more_count=1):
+    mortality_data_index_list = list()
+
+    for index, value in enumerate(y_train):
+        if value == [1]:
+            mortality_data_index_list.append(index)
+
+    for i in range(more_count):
+        for index in mortality_data_index_list:
+            x_train.append(x_train[index])
+            y_train.append(y_train[index])
+
+    return x_train, y_train
+
+
 def closed_validation(myData):
     fig = plt.figure(figsize=(10, 6))
     fig.suptitle("ROC CURVE", fontsize=16)
@@ -174,8 +189,8 @@ def closed_validation(myData):
     logistic_plot.set_ylabel("TPR (sensitivity)")
     logistic_plot.set_xlabel("1 - specificity")
 
-    y_train = myData.y_data
-    y_test = myData.y_data
+    y_train = myData.y_data[:]
+    y_test = myData.y_data[:]
 
     accuracy = {"logistic_regression": 0, "svm": 0}
     precision = {"logistic_regression": 0, "svm": 0}
@@ -188,6 +203,8 @@ def closed_validation(myData):
     # get x_data from dictionary(data set), and set data count
     x_train = myOneHotEncoder.fit(myData.data_dict, len(y_train))
     x_test = myOneHotEncoder.fit(myData.data_dict, len(y_test))
+
+    # make_more_mortality(x_train, y_train, more_count=4)
 
     show_shape(myData, x_train, x_test, y_train, y_test)
 
