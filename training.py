@@ -7,7 +7,7 @@ import numpy as np
 
 
 def k_fold_cross_validation(myData):
-    def _set_x_dict(exception_list=list(), _is_test=False):
+    def _set_x_dict(_is_test=False):
         x_dict = dict()
 
         if _is_test:
@@ -15,10 +15,7 @@ def k_fold_cross_validation(myData):
                 x_dict[_k] = _vector_list[i * subset_size:][:subset_size]
         else:
             for _k, _vector_list in myData.data_dict.items():
-                if _k in exception_list:
-                    x_dict[_k] = _vector_list
-                else:
-                    x_dict[_k] = _vector_list[:i * subset_size] + _vector_list[(i + 1) * subset_size:]
+                x_dict[_k] = _vector_list[:i * subset_size] + _vector_list[(i + 1) * subset_size:]
 
         return x_dict
 
@@ -52,7 +49,7 @@ def k_fold_cross_validation(myData):
 
         # set encoding original data what column class is in the exception list
         # J : 연령, AO : 수축혈압, AP : 이완혈압, AQ : 맥박수, AR : 호흡수, AS : 체온 (scalar data)
-        myOneHotEncoder.encoding(_set_x_dict(exception_list=["J", "AO", "AP", "AQ", "AR", "AS"]))
+        myOneHotEncoder.encoding(_set_x_dict())
 
         # get x_data from dictionary(data set), and set data count
         x_train = myOneHotEncoder.fit(_set_x_dict(_is_test=False), len(y_train))
@@ -133,7 +130,7 @@ def one_fold_validation(myData):
 
     # set encoding original data what column class is in the exception list
     # J : 연령, AO : 수축혈압, AP : 이완혈압, AQ : 맥박수, AR : 호흡수, AS : 체온 (scalar data)
-    myOneHotEncoder.encoding(_set_x_dict(exception_list=["J", "AO", "AP", "AQ", "AR", "AS"]))
+    myOneHotEncoder.encoding(_set_x_dict())
 
     # get x_data from dictionary(data set), and set data count
     x_train = myOneHotEncoder.fit(_set_x_dict(), len(y_train))
