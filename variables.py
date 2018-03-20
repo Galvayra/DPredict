@@ -2,7 +2,7 @@
 NUM_FOLDS = 1
 # using test set 10 %
 RATIO = 10
-IS_CLOSED = False
+IS_CLOSED = True
 
 
 def show_options():

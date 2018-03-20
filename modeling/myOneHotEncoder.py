@@ -12,12 +12,12 @@ class MyOneHotEncoder:
             scalar_dict = dict()
             scalar_list = sorted(list(set(vector_list)))
 
-            # 연령이 아닌 경우는 -1, 0 두개의 값이 오류이므로 제외
-            if k is not "J":
-                scalar_list = scalar_list[2:]
-
-            # 마지막 값은 오류이므로 제외
-            scalar_list.pop()
+            # # 연령이 아닌 경우는 -1, 0 두개의 값이 오류이므로 제외
+            # if k is not "J":
+            #     scalar_list = scalar_list[2:]
+            #
+            # # 마지막 값은 오류이므로 제외
+            # scalar_list.pop()
 
             scalar_dict["min"] = scalar_list[0]
             scalar_dict["max"] = scalar_list[-1]
