@@ -65,15 +65,15 @@ class DataHandler:
             if value == "-":
                 erase_index_list.append(i)
 
-        header_key = self.head_dict["AO"]
-        for i, value in enumerate(self.rows_data[header_key]):
-            if value == 0 or value == -1:
-                erase_index_list.append(i)
-
-        header_key = self.head_dict["AS"]
-        for i, value in enumerate(self.rows_data[header_key]):
-            if value == 99.9 or value == -1.0:
-                erase_index_list.append(i)
+        # header_key = self.head_dict["AO"]
+        # for i, value in enumerate(self.rows_data[header_key]):
+        #     if value == 0 or value == -1:
+        #         erase_index_list.append(i)
+        #
+        # header_key = self.head_dict["AS"]
+        # for i, value in enumerate(self.rows_data[header_key]):
+        #     if value == 99.9 or value == -1.0:
+        #         erase_index_list.append(i)
 
         return sorted(list(set(erase_index_list)), reverse=True)
 

@@ -109,13 +109,16 @@ class MyOneHotEncoder:
 
                 for i, value in enumerate(v):
                     # exception
-                    if value > maximum:
-                        value = float(1)
-                    elif value < minimum:
-                        value = MIN_SCALING/(division + MIN_SCALING)
-                    # normalization
+                    if value <= 0 and value <= minimum:
+                        value = float(0)
                     else:
-                        value = (value - minimum + MIN_SCALING)/(division + MIN_SCALING)
+                        if value > maximum:
+                            value = float(1)
+                        elif value < minimum:
+                            value = MIN_SCALING/(division + MIN_SCALING)
+                        # normalization
+                        else:
+                            value = (value - minimum + MIN_SCALING)/(division + MIN_SCALING)
 
                     x_data[i].append(value)
 
