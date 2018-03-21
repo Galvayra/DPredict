@@ -33,7 +33,7 @@ class MyOneHotEncoder:
             symptom_dict = dict()
 
             for line in vector_list:
-                line = line.strip()
+                line = line.strip().lower()
                 if line.endswith(";"):
                     line = line[:-1]
 
@@ -55,6 +55,7 @@ class MyOneHotEncoder:
             # key : 주증상
             elif k == "O":
                 self.vector_dict[k] = _set_symptom_dict()
+                # print(len(self.vector_dict[k]))
             # key : 의식
             elif k == "AN":
                 self.vector_dict[k] = _set_class_dict()
@@ -80,6 +81,18 @@ class MyOneHotEncoder:
                 else:
                     x_data[i].append(0.0)
 
+        def _make_vector_from_word():
+            line = value.strip().lower()
+            if line.endswith(";"):
+                line = line[:-1]
+            symptom = [symptom.strip() for symptom in line.split(";")]
+
+            for c in class_list:
+                if c in symptom:
+                    x_data[i].append(1.0)
+                else:
+                    x_data[i].append(0.0)
+
         x_data = _init_x_data()
 
         for k, v in data_dict.items():
@@ -95,7 +108,9 @@ class MyOneHotEncoder:
                 # pass
                 class_list = encode_dict.keys()
                 for i, value in enumerate(v):
-                    _make_vector_from_class()
+                    _make_vector_from_word()
+                    # _make_vector_from_class()
+                    # print(x_data[i])
             # key : 의식
             elif k == "AN":
                 class_list = encode_dict.keys()
