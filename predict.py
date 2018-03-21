@@ -5,7 +5,7 @@ from variables import NUM_FOLDS, IS_CLOSED
 
 NUM_HIDDEN_LAYER = 0
 NUM_HIDDEN_DIMENSION = 0
-EPOCH = 400
+EPOCH = 500
 
 
 def logistic_regression(x_train, y_train, x_test, y_test, fold):
@@ -50,9 +50,7 @@ def logistic_regression(x_train, y_train, x_test, y_test, fold):
 
     with tf.name_scope("cost"):
         cost = -tf.reduce_mean(tf_y * tf.log(hypothesis) + (1-tf_y) * tf.log(1-hypothesis))
-
-        if NUM_FOLDS == 1 or IS_CLOSED:
-            cost_summ = tf.summary.scalar("cost", cost)
+        cost_summ = tf.summary.scalar("cost", cost)
 
     train = tf.train.AdamOptimizer(learning_rate=0.01).minimize(cost)
 
@@ -60,31 +58,22 @@ def logistic_regression(x_train, y_train, x_test, y_test, fold):
     predict = tf.cast(hypothesis > 0.5, dtype=tf.float32)
     accuracy = tf.reduce_mean(tf.cast(tf.equal(predict, tf_y), dtype=tf.float32))
 
-    if NUM_FOLDS == 1 or IS_CLOSED:
-        accuracy_summ = tf.summary.scalar("accuracy", accuracy)
+    accuracy_summ = tf.summary.scalar("accuracy", accuracy)
 
     with tf.Session() as sess:
         merged_summary = tf.summary.merge_all()
-        if NUM_FOLDS == 1 or IS_CLOSED:
-            writer = tf.summary.FileWriter("./logs/log_0" + str(fold + 1))
-            writer.add_graph(sess.graph)  # Show the graph
+        writer = tf.summary.FileWriter("./logs/log_0" + str(fold + 1))
+        writer.add_graph(sess.graph)  # Show the graph
 
         sess.run(tf.global_variables_initializer())
         sess.run(tf.local_variables_initializer())
 
-        if NUM_FOLDS == 1 or IS_CLOSED:
-            for step in range(EPOCH + 1):
-                summary, cost_val, _ = sess.run([merged_summary, cost, train], feed_dict={tf_x: x_train, tf_y: y_train})
-                writer.add_summary(summary, global_step=step)
+        for step in range(EPOCH + 1):
+            summary, cost_val, _ = sess.run([merged_summary, cost, train], feed_dict={tf_x: x_train, tf_y: y_train})
+            writer.add_summary(summary, global_step=step)
 
-                if step % (EPOCH / 10) == 0:
-                    print(str(step).rjust(6), cost_val)
-        else:
-            for step in range(EPOCH + 1):
-                cost_val, _ = sess.run([cost, train], feed_dict={tf_x: x_train, tf_y: y_train})
-
-                if step % (EPOCH / 10) == 0:
-                    print(str(step).rjust(6), cost_val)
+            if step % (EPOCH / 10) == 0:
+                print(str(step).rjust(6), cost_val)
 
         h, p, a = sess.run([hypothesis, predict, accuracy], feed_dict={tf_x: x_test, tf_y: y_test})
 
