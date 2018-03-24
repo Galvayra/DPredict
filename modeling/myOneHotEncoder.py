@@ -95,26 +95,26 @@ class MyOneHotEncoder:
 
         x_data = _init_x_data()
 
-        for k, v in data_dict.items():
+        for k in sorted(data_dict.keys()):
             encode_dict = self.vector_dict[k]
 
             # key : 성별
             if k == "K":
                 class_list = encode_dict.keys()
-                for i, value in enumerate(v):
+                for i, value in enumerate(data_dict[k]):
                     _make_vector_from_class()
             # key : 주증상
             elif k == "O":
                 # pass
                 class_list = encode_dict.keys()
-                for i, value in enumerate(v):
+                for i, value in enumerate(data_dict[k]):
                     _make_vector_from_word()
                     # _make_vector_from_class()
                     # print(x_data[i])
             # key : 의식
             elif k == "AN":
                 class_list = encode_dict.keys()
-                for i, value in enumerate(v):
+                for i, value in enumerate(data_dict[k]):
                     _make_vector_from_class()
             # scalar vector
             else:
@@ -122,7 +122,7 @@ class MyOneHotEncoder:
                 maximum = encode_dict["max"]
                 division = encode_dict["div"]
 
-                for i, value in enumerate(v):
+                for i, value in enumerate(data_dict[k]):
                     # exception
                     if value <= 0 and value <= minimum:
                         value = float(0)

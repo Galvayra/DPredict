@@ -201,28 +201,29 @@ def closed_validation(myData):
     x_train = myOneHotEncoder.fit(myData.data_dict, len(y_train))
     x_test = myOneHotEncoder.fit(myData.data_dict, len(y_test))
 
+    print(x_train[0])
     # make_more_mortality(x_train, y_train, more_count=4)
 
     show_shape(myData, x_train, x_test, y_train, y_test)
 
-    # SVM
-    x_train_np = np.array([np.array(j) for j in x_train])
-    x_test_np = np.array([np.array(j) for j in x_test])
-    y_train_np = np.array([np.array(j) for j in y_train])
-    y_test_np = np.array([np.array(j) for j in y_test])
-
-    # Logistic Regression
-    probas_, accuracy['logistic_regression'], precision['logistic_regression'], recall['logistic_regression'] = logistic_regression(x_train, y_train, x_test, y_test, 0)
-    logit_fpr, logit_tpr, _ = roc_curve(y_test, probas_)
-    roc_auc = auc(logit_fpr, logit_tpr)
-    logistic_plot.plot(logit_fpr, logit_tpr, alpha=0.3, label='ROC fold 1 (AUC = %0.2f)' % (roc_auc*100))
-
-    probas_, accuracy['svm'], precision['svm'], recall['svm'] = predict_svm(x_train_np, y_train_np, x_test_np, y_test_np)
-    svm_fpr, svm_tpr, _ = roc_curve(y_test_np, probas_[:, 1])
-    roc_auc = auc(svm_fpr, svm_tpr)
-    svm_plot.plot(svm_fpr, svm_tpr, alpha=0.3, label='ROC fold 1 (AUC = %0.2f)' % (roc_auc*100))
-
-    show_plt(accuracy, precision, recall, 1, logistic_plot, svm_plot)
+    # # SVM
+    # x_train_np = np.array([np.array(j) for j in x_train])
+    # x_test_np = np.array([np.array(j) for j in x_test])
+    # y_train_np = np.array([np.array(j) for j in y_train])
+    # y_test_np = np.array([np.array(j) for j in y_test])
+    #
+    # # Logistic Regression
+    # probas_, accuracy['logistic_regression'], precision['logistic_regression'], recall['logistic_regression'] = logistic_regression(x_train, y_train, x_test, y_test, 0)
+    # logit_fpr, logit_tpr, _ = roc_curve(y_test, probas_)
+    # roc_auc = auc(logit_fpr, logit_tpr)
+    # logistic_plot.plot(logit_fpr, logit_tpr, alpha=0.3, label='ROC fold 1 (AUC = %0.2f)' % (roc_auc*100))
+    #
+    # probas_, accuracy['svm'], precision['svm'], recall['svm'] = predict_svm(x_train_np, y_train_np, x_test_np, y_test_np)
+    # svm_fpr, svm_tpr, _ = roc_curve(y_test_np, probas_[:, 1])
+    # roc_auc = auc(svm_fpr, svm_tpr)
+    # svm_plot.plot(svm_fpr, svm_tpr, alpha=0.3, label='ROC fold 1 (AUC = %0.2f)' % (roc_auc*100))
+    #
+    # show_plt(accuracy, precision, recall, 1, logistic_plot, svm_plot)
 
 
 def show_plt(accuracy, precision, recall, num_folds, logistic_plot, svm_plot):
