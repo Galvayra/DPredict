@@ -201,7 +201,6 @@ def closed_validation(myData):
     x_train = myOneHotEncoder.fit(myData.data_dict, len(y_train))
     x_test = myOneHotEncoder.fit(myData.data_dict, len(y_test))
 
-    print(x_train[0])
     # make_more_mortality(x_train, y_train, more_count=4)
 
     show_shape(myData, x_train, x_test, y_train, y_test)
