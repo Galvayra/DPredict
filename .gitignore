@@ -2,3 +2,4 @@ dataset/*.csv
 dataset/origin/
 results/
 modeling/vectors/
+reference/
