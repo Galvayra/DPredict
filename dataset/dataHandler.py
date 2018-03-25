@@ -28,7 +28,8 @@ class DataHandler:
 
             return key
 
-        self.rows_data = pd.read_csv(DATA_PATH + DATA_READ)
+        self.file_name = DATA_READ
+        self.rows_data = pd.read_csv(DATA_PATH + self.file_name)
         self.head_dict = {_get_head_dict_key(i): v for i, v in enumerate(self.rows_data)}
         self.y_data = list()
         self.erase_index_list = self.set_erase_index_list()

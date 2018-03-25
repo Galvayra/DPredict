@@ -1,5 +1,4 @@
 dataset/*.csv
 dataset/origin/
-Result/
-original_dataset/
-Pickle/
+results/
+modeling/vectors/
