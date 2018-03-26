@@ -15,10 +15,8 @@ from DPredict.modeling.vectorization import MyVector
 if __name__ == '__main__':
     myData = DataHandler()
     myData.set_labels()
-    myData.show_mortality()
-
     myData.free()
 
-    # myVector = MyVector(myData)
-    # myVector.encoding()
-    # myVector.dump()
+    myVector = MyVector(myData)
+    myVector.encoding()
+    myVector.dump()

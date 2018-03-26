@@ -105,46 +105,6 @@ class DataHandler:
         del self.head_dict
         del self.erase_index_list
 
-    def show_mortality(self):
-        symptom = {
-            "pneumonia": list(),
-            "sepsis": list(),
-            "bacteremia": list()
-        }
-        symptom_dict = dict()
-
-        for i, data in enumerate(self.data_dict["O"]):
-            data = data.lower().strip()
-            for key in symptom:
-                if data.find(key) != -1:
-                    if self.y_data[i] == [1]:
-                        print(i, key)
-        #
-        # print(symptom)
-        #
-        # # for key, v in symptom.items():
-        # #     for index in v:
-        # #         if index not in symptom_dict:
-        # #             # key : index // [0] = count, [1] = symptom_list, [2] = mortality
-        # #             symptom_dict[index] = [1, [key]]
-        # #             if self.y_data[index] == [1]:
-        # #                 symptom_dict[index].append(1)
-        # #             else:
-        # #                 symptom_dict[index].append(0)
-        # #         else:
-        # #             symptom_dict[index][0] += 1
-        # #             if key not in symptom_dict[index][1]:
-        # #                 symptom_dict[index][1].append(key)
-        # #
-        # # mortal_dict = dict()
-        # # for key in sorted(symptom_dict):
-        # #     if symptom_dict[key][2] == 1:
-        # #         mortal_dict[key] = symptom_dict[key][1]
-        #
-        # # print(len(mortal_dict))
-        # # for k, v in mortal_dict.items():
-        # #     print(k, v)
-
     def counting_mortality(self, data):
         count = 0
         for i in data:
