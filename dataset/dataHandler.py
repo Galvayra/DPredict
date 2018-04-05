@@ -54,6 +54,35 @@ class DataHandler:
 
     # erase row WHERE "J" (연령) < 65, and WHERE "AN" (의식) == "-"
     def set_erase_index_list(self):
+
+        # header keys 조건이 모두 만족 할 때
+        def __condition__(header_list, condition):
+            _header_keys = [self.head_dict[_i] for _i in header_list]
+
+            _erase_index_dict = {_i: 0 for _i in range(len(self.rows_data[_header_keys[0]]))}
+
+            for _header_key in _header_keys:
+                for _index, _value in enumerate(self.rows_data[_header_key]):
+                    _value = str(_value)
+
+                    if condition == 0:
+                        if _value == str(condition) or value == str(0.0) or value == "nan":
+                            _erase_index_dict[_index] += 1
+                    else:
+                        if _value == str(condition):
+                            _erase_index_dict[_index] += 1
+
+            return _erase_index_dict, len(header_list)
+
+        def __append__(_erase_index_dict, _num_match, _individual=False):
+            for index, v in _erase_index_dict.items():
+                if _individual and v >= _num_match:
+                    if index not in erase_index_list:
+                        erase_index_list.append(index)
+                elif not _individual and v == _num_match:
+                    if index not in erase_index_list:
+                        erase_index_list.append(index)
+
         erase_index_list = list()
 
         header_key = self.head_dict["J"]
@@ -65,6 +94,13 @@ class DataHandler:
         for i, value in enumerate(self.rows_data[header_key]):
             if value == "-":
                 erase_index_list.append(i)
+
+        # AO : 수축혈압, AP : 이완혈압, AQ : 맥박수, AR : 호흡수 == 0 제외
+        erase_index_dict, num_match = __condition__(header_list=["AO", "AP", "AQ", "AR"], condition=0)
+        __append__(erase_index_dict, num_match)
+
+        erase_index_dict, num_match = __condition__(header_list=["AO", "AP", "AQ", "AR"], condition=-1)
+        __append__(erase_index_dict, num_match)
 
         # header_key = self.head_dict["AO"]
         # for i, value in enumerate(self.rows_data[header_key]):
@@ -112,3 +148,9 @@ class DataHandler:
                 count += 1
 
         return count
+
+    def show_data(self):
+
+        for k, v in self.data_dict.items():
+            print(k, len(v), v)
+

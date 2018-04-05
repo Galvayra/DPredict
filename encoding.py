@@ -17,6 +17,7 @@ if __name__ == '__main__':
     myData.set_labels()
     myData.free()
 
+    # myData.show_data()
     myVector = MyVector(myData)
     myVector.encoding()
     myVector.dump()
